@@ -1,0 +1,6 @@
+22:37:27 **** Incremental Build of configuration Nios II for project final ****
+make all 
+makefile:235: *** BSP directory does not exist: ../usb_kb_bsp/.  Stop.
+
+22:37:27 Build Finished (took 141ms)
+

@@ -1,0 +1,185 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1200mV 85C Model Setup 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 3.141
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Setup 'main_clk_50'
+Slack : 3.588
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Setup 'altera_reserved_tck'
+Slack : 46.119
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'main_clk_50'
+Slack : 0.385
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 0.386
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'altera_reserved_tck'
+Slack : 0.402
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Recovery 'main_clk_50'
+Slack : 12.387
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Recovery 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 14.732
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Recovery 'altera_reserved_tck'
+Slack : 47.705
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Removal 'altera_reserved_tck'
+Slack : 1.408
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Removal 'main_clk_50'
+Slack : 3.031
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Removal 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 3.683
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'main_clk_50'
+Slack : 9.627
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 9.695
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'altera_reserved_tck'
+Slack : 49.617
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Setup 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 3.692
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Setup 'main_clk_50'
+Slack : 4.604
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Setup 'altera_reserved_tck'
+Slack : 46.451
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 0.337
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'main_clk_50'
+Slack : 0.338
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'altera_reserved_tck'
+Slack : 0.354
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Recovery 'main_clk_50'
+Slack : 13.025
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Recovery 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 15.222
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Recovery 'altera_reserved_tck'
+Slack : 47.990
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Removal 'altera_reserved_tck'
+Slack : 1.302
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Removal 'main_clk_50'
+Slack : 2.694
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Removal 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 3.262
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'main_clk_50'
+Slack : 9.647
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 9.683
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'altera_reserved_tck'
+Slack : 49.563
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Setup 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 5.328
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Setup 'main_clk_50'
+Slack : 5.527
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Setup 'altera_reserved_tck'
+Slack : 48.240
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'main_clk_50'
+Slack : 0.161
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 0.173
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'altera_reserved_tck'
+Slack : 0.181
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Recovery 'main_clk_50'
+Slack : 15.852
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Recovery 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 17.194
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Recovery 'altera_reserved_tck'
+Slack : 49.026
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Removal 'altera_reserved_tck'
+Slack : 0.664
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Removal 'main_clk_50'
+Slack : 1.569
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Removal 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 1.915
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'main_clk_50'
+Slack : 9.372
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'nios_system|sdram_pll|sd1|pll7|clk[0]'
+Slack : 9.779
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'altera_reserved_tck'
+Slack : 49.471
+TNS   : 0.000
+
+------------------------------------------------------------
