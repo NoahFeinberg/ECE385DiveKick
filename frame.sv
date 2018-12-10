@@ -18,6 +18,7 @@ module frame(   input               Clk,                // 50 MHz clock
     logic [0:11][0:143][0:1]  dive_health_bar, kick_health_bar;
     //logic [0:479][0:319][0:5] image_left, image_right;
     logic [0:104][0:71][0:5] p1_ground, p1_jump, p1_kick;
+	 logic [0:104][71:0][0:5] p1_back_ground, p1_back_jump, p1_back_kick;
     background background_instance(
                                     .Clk(Clk),
                                     .dive_health_bar(dive_health_bar),
@@ -29,7 +30,10 @@ module frame(   input               Clk,                // 50 MHz clock
 	sprite	sprite_color(				.Clk(Clk),
 										.stand(p1_ground),
 										.kick(p1_kick),
-										.jump(p1_jump));
+										.jump(p1_jump),
+										.back_stand(p1_back_ground),
+										.back_kick(p1_back_kick),
+										.back_jump(p1_back_jump));
 
     color_mapper(                   .color(color),
                                     .VGA_R(VGA_R),
@@ -51,7 +55,9 @@ module frame(   input               Clk,                // 50 MHz clock
 			color <= next_color2;
 		else
 		begin 
-			if(DrawX<=319)
+			if(DrawY>=10'd429)
+				color<= 6'd63;
+			else if(DrawX<=10'd319)
 				color<= 6'd7;
 				//next_color = image_left[DrawY][DrawX];
 			else
@@ -114,6 +120,21 @@ module frame(   input               Clk,                // 50 MHz clock
 						next_color = p1_kick[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos];
 						next_color2 = next_color;
 					end
+				3:
+					begin
+						next_color = p1_back_ground[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos];
+						next_color2 = next_color;
+					end
+				4:
+					begin
+						next_color = p1_back_jump[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos];
+						next_color2 = next_color;
+					end
+				5:
+					begin	
+						next_color = p1_back_kick[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos];
+						next_color2 = next_color;
+					end
 				default:
 				begin
 					next_color = 6'd63;//error
@@ -128,13 +149,25 @@ module frame(   input               Clk,                // 50 MHz clock
 			case(p2_state)
 				0:
 					begin
-						next_color = p1_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];		
+						next_color = p1_back_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];		
 					end
 				1:
 					begin
-						next_color = p1_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];
+						next_color = p1_back_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];
 					end
 				2:
+					begin
+						next_color = p1_back_kick[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];
+					end
+				3:
+					begin
+						next_color = p1_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];		
+					end
+				4:
+					begin
+						next_color = p1_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];
+					end
+				5:
 					begin
 						next_color = p1_kick[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];
 					end

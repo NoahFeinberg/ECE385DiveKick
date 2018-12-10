@@ -1,12 +1,12 @@
-Fitter Status : Successful - Thu Dec 06 22:52:08 2018
+Fitter Status : Successful - Sun Dec 09 20:17:27 2018
 Quartus Prime Version : 18.0.0 Build 614 04/24/2018 SJ Lite Edition
 Revision Name : lab8
 Top-level Entity Name : lab8
 Family : Cyclone IV E
 Device : EP4CE115F29C7
 Timing Models : Final
-Total logic elements : 5,142 / 114,480 ( 4 % )
-    Total combinational functions : 4,494 / 114,480 ( 4 % )
+Total logic elements : 5,752 / 114,480 ( 5 % )
+    Total combinational functions : 5,087 / 114,480 ( 4 % )
     Dedicated logic registers : 2,240 / 114,480 ( 2 % )
 Total registers : 2359
 Total pins : 142 / 529 ( 27 % )

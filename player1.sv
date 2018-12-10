@@ -102,8 +102,8 @@ module  player1 ( input     Clk,                // 50 MHz clock
         if (frame_clk_rising_edge)
         begin
                 //keyboard interaction
-				case(state%3'd3)
-					0:
+				case(state)
+					0,3:
 					begin
 						if(a_on) //k = jump
 						begin
@@ -124,7 +124,7 @@ module  player1 ( input     Clk,                // 50 MHz clock
 						end
 						current_side = (player2_X_Pos>= player1_X_Pos);
 					end
-					1:
+					1,4:
 					begin
 						if(s_on)//l = kick
 						begin
