@@ -82,6 +82,12 @@ module  color_mapper ( input  [0:5]       color,           // Whether current pi
             Green = 8'ha7;
             Blue = 8'ha7;
         end
+		63:
+        begin
+            Red = 8'h42; 
+            Green = 8'h85;
+            Blue = 8'h80;
+        end
         default://blue
         begin
             Red = 8'hff; 

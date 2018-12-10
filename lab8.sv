@@ -15,7 +15,7 @@
 
 module lab8( input               CLOCK_50,
              input        [3:0]  KEY,          //bit 0 is set up as Reset
-             output logic [6:0]  HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7,
+             output logic [6:0]  HEX0, HEX2, HEX4, HEX6,
              // VGA Interface
              output logic [7:0]  VGA_R,        //VGA Red
                                  VGA_G,        //VGA Green
@@ -48,7 +48,7 @@ module lab8( input               CLOCK_50,
     
     logic Reset_h, Clk;
     logic [31:0] keycode;
-	logic a_on, s_on, k_on, l_on;
+	logic a_on, s_on, k_on, l_on, Freeze;
     
     assign Clk = CLOCK_50;
     always_ff @ (posedge Clk) begin
@@ -133,7 +133,7 @@ module lab8( input               CLOCK_50,
     
     // Which signal should be frame_clk?
     player1 fighter1(			        .Clk(Clk),
-								        .Reset(~KEY[3] || Reset_h),
+								        .Reset(~KEY[3] || Reset_h||Restart),
 							            .frame_clk(VGA_VS),
 										.player2_X_Pos(player2_X_Pos),
 										.player2_Y_Pos(player2_Y_Pos),
@@ -141,12 +141,13 @@ module lab8( input               CLOCK_50,
 										.DrawY(DrawY),
 										.a_on(a_on),
 										.s_on(s_on),
+                                        .Freeze(Freeze),
 										.state(p1_state),
 										.player1_X_Pos(player1_X_Pos),
 										.player1_Y_Pos(player1_Y_Pos));
     
 	 player2 fighter2(			        .Clk(Clk),
-								        .Reset(~KEY[3] || Reset_h),
+								        .Reset(~KEY[3] || Reset_h||Restart),
 							            .frame_clk(VGA_VS),
 										.player1_X_Pos(player1_X_Pos),
 										.player1_Y_Pos(player1_Y_Pos),
@@ -154,6 +155,7 @@ module lab8( input               CLOCK_50,
 										.DrawY(DrawY),
 										.k_on(k_on),
 										.l_on(l_on),
+                                        .Freeze(Freeze),
 										.state(p2_state),
 										.player2_X_Pos(player2_X_Pos),
 										.player2_Y_Pos(player2_Y_Pos));
@@ -170,6 +172,8 @@ module lab8( input               CLOCK_50,
                                         .fighter_Y_Pos(player1_Y_Pos),
 										.player2_X_Pos(player2_X_Pos),
                                         .player2_Y_Pos(player2_Y_Pos),
+                                        .Freeze(Freeze),
+                                        .Restart(Restart),
                                         .VGA_R(VGA_R),
                                         .VGA_G(VGA_G),
                                         .VGA_B(VGA_B));

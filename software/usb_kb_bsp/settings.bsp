@@ -2,9 +2,9 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Dec 5, 2018 9:50:03 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1544068203289</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>C:\Users\dhche\Documents\ece385\final\software\usb_kb_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Dec 6, 2018 10:52:54 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1544158374570</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>C:\Users\noahb\Desktop\ECE385\ECE385DiveKick\software\usb_kb_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_system.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>

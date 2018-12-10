@@ -3,6 +3,7 @@ module frame(   input               Clk,                // 50 MHz clock
                                     frame_clk,          // The clock indicating a new frame (~60Hz)
 				input [2:0]			p1_state,p2_state,
                 input [9:0]         DrawX, DrawY, fighter_X_Pos, fighter_Y_Pos,player2_X_Pos, player2_Y_Pos,
+				output				Freeze,Restart,
                 output logic [7:0] VGA_R, VGA_G, VGA_B );
 
     logic [9:0] frame_X_Pos = 10'd0;       // Leftmost point on the X axis
@@ -10,7 +11,10 @@ module frame(   input               Clk,                // 50 MHz clock
     logic [9:0] frame_Height = 10'd479;      // frame height
     logic [9:0] frame_Width = 10'd639; 
 
-    logic [0:5] color, next_color;
+	logic will_freeze = 1'b0;
+	logic will_restart = 1'b0;
+
+    logic [0:5] color, next_color, next_color2;
     logic [0:11][0:143][0:1]  dive_health_bar, kick_health_bar;
     //logic [0:479][0:319][0:5] image_left, image_right;
     logic [0:104][0:71][0:5] p1_ground, p1_jump, p1_kick;
@@ -37,15 +41,23 @@ module frame(   input               Clk,                // 50 MHz clock
     begin
         frame_clk_delayed <= frame_clk;
         frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
+		Freeze = will_freeze;
+		Restart = will_restart;
 
-        if (Reset)
-        begin
+		//picks the color for the pixel
+        if (next_color != 6'd0)
             color <= next_color;
-        end
-        else
-        begin
-            color <= next_color;
-        end
+		else if(next_color2 !=6'd0)
+			color <= next_color2;
+		else
+		begin 
+			if(DrawX<=319)
+				color<= 6'd7;
+				//next_color = image_left[DrawY][DrawX];
+			else
+				color <= 6'd8;
+				//next_color = image_right[DrawY][DrawX-10'd319];
+	  end
     end
 
     
@@ -66,130 +78,69 @@ module frame(   input               Clk,                // 50 MHz clock
     assign fighter_current_x = fighter_X_Pos;
     always_comb
     begin
-		//dive health bar 
+		//base change colors
+		next_color = 6'd0;
+		next_color2 = 6'd0;
+		will_freeze = 1'b0;
+		will_restart = 1'b0;
+
+		//dive health bar
         if(((DrawY<health_bottom) && (DrawY>=health_top))&& ((DrawX>=left_bar_left) && (DrawX<left_bar_right)))
         begin
             next_color = dive_health_bar[DrawY-health_top][DrawX-left_bar_left];
         end
 		
 		//kick helth bar
-        else if(((DrawY<=health_bottom) && (DrawY>health_top))&& ((DrawX>=right_bar_left) && (DrawX<right_bar_right)))
+        if(((DrawY<=health_bottom) && (DrawY>health_top))&& ((DrawX>=right_bar_left) && (DrawX<right_bar_right)))
         begin
             next_color = kick_health_bar[DrawY-health_bottom][DrawX-right_bar_left];
         end
-		
 		//player 1
-        else if(((fighter_X_Pos<=DrawX) && (fighter_X_Pos+fighter_Width)>DrawX ) &&((fighter_Y_Pos<DrawY)&& (fighter_Y_Pos+fighter_Height)>=DrawY))
+        if(((fighter_X_Pos<=DrawX) && (fighter_X_Pos+fighter_Width)>DrawX ) &&((fighter_Y_Pos<DrawY)&& (fighter_Y_Pos+fighter_Height)>=DrawY))
         begin
 			case(p1_state)
 				0:
 					begin
 						next_color = p1_ground[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos];
-						if(p1_ground[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos] == 5'd0)
-						begin
-							if(DrawX<=319)
-								next_color = 5'd7;
-								//next_color = image_left[DrawY][DrawX];
-							else
-								next_color = 5'd8;
-								//next_color = image_right[DrawY][DrawX-10'd319];
-						end
-							
+						next_color2 = next_color;
 					end
 				1:
 					begin
 						next_color = p1_jump[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos];
-						if(p1_jump[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos] == 5'd0)
-						begin
-							if(DrawX<=319)
-								next_color = 5'd7;
-								//next_color = image_left[DrawY][DrawX];
-							else
-								next_color = 5'd8;
-								//next_color = image_right[DrawY][DrawX-10'd319];
-						end
-					
+						next_color2 = next_color;
 					end
 				2:
-					begin
+					begin	
 						next_color = p1_kick[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos];
-						if(p1_kick[DrawY-fighter_Y_Pos][DrawX-fighter_X_Pos] == 5'd0)
-						begin
-							if(DrawX<=319)
-								next_color = 5'd7;
-								//next_color = image_left[DrawY][DrawX];
-							else
-								next_color = 5'd8;
-								//next_color = image_right[DrawY][DrawX-10'd319];
-						end
-						
+						next_color2 = next_color;
 					end
 				default:
-					next_color = 5'd0;//error
+				begin
+					next_color = 6'd63;//error
+				end
 			endcase
 			
         end
-		
-		else if((player2_X_Pos<=DrawX && (player2_X_Pos+fighter_Width)>DrawX ) &&((player2_Y_Pos<DrawY)&& (player2_Y_Pos+fighter_Height)>=DrawY))
+
+		//player 2
+		if((player2_X_Pos<=DrawX && (player2_X_Pos+fighter_Width)>DrawX ) &&((player2_Y_Pos<DrawY)&& (player2_Y_Pos+fighter_Height)>=DrawY))
         begin
 			case(p2_state)
 				0:
 					begin
-						next_color = p1_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];
-						if(p1_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos] == 5'd0)
-						begin
-							if(DrawX<=319)
-								next_color = 5'd7;
-								//next_color = image_left[DrawY][DrawX];
-							else
-								next_color = 5'd8;
-								//next_color = image_right[DrawY][DrawX-10'd319];
-						end
-							
+						next_color = p1_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];		
 					end
 				1:
 					begin
 						next_color = p1_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];
-						if(p1_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos] == 5'd0)
-						begin
-							if(DrawX<=319)
-								next_color = 5'd7;
-								//next_color = image_left[DrawY][DrawX];
-							else
-								next_color = 5'd8;
-								//next_color = image_right[DrawY][DrawX-10'd319];
-						end
-					
 					end
 				2:
 					begin
 						next_color = p1_kick[DrawY-player2_Y_Pos][DrawX-player2_X_Pos];
-						if(p1_kick[DrawY-player2_Y_Pos][DrawX-player2_X_Pos] == 5'd0)
-						begin
-							if(DrawX<=319)
-								next_color = 5'd7;
-								//next_color = image_left[DrawY][DrawX];
-							else
-								next_color = 5'd8;
-								//next_color = image_right[DrawY][DrawX-10'd319];
-						end
-						
 					end
 				default:
-					next_color = 5'd0;//error
+					next_color = 6'd63;//error
 			endcase
-			
-        end
-		
-		//background
-        else 
-        begin
-            if(DrawX<=319)
-				next_color = 5'd7;
-				//next_color = image_left[DrawY][DrawX];
-			else
-				next_color = 5'd8;
-				//next_color = image_right[DrawY][DrawX-10'd319];
         end
     end
 endmodule
