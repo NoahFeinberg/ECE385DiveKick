@@ -1,5 +1,5 @@
 module background( input                             Clk,
-                    output logic [0:11][0:143][0:5]  dive_health_bar, kick_health_bar
+                    output logic [0:11][0:143][0:5]  dive_health_bar, kick_health_bar,
 					output logic [0:19][0:199][0:5]     p1_win, p2_win,
                     output logic [0:39][0:199][0:5]     title
 				 );
