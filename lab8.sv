@@ -48,7 +48,7 @@ module lab8( input               CLOCK_50,
     
     logic Reset_h, Clk;
     logic [31:0] keycode;
-	logic a_on, s_on, k_on, l_on, Freeze, Restart;
+	logic a_on, s_on, k_on, l_on, Freeze;
     
     assign Clk = CLOCK_50;
     always_ff @ (posedge Clk) begin
@@ -133,7 +133,7 @@ module lab8( input               CLOCK_50,
     
     // Which signal should be frame_clk?
     player1 fighter1(			        .Clk(Clk),
-								        .Reset(~KEY[3] || Reset_h||Restart),
+								        .Reset(~KEY[3] || Reset_h),
 							            .frame_clk(VGA_VS),
 										.player2_X_Pos(player2_X_Pos),
 										.DrawX(DrawX),
@@ -146,7 +146,7 @@ module lab8( input               CLOCK_50,
 										.player1_Y_Pos(player1_Y_Pos));
     
 	 player2 fighter2(			        .Clk(Clk),
-								        .Reset(~KEY[3] || Reset_h||Restart),
+								        .Reset(~KEY[3] || Reset_h),
 							            .frame_clk(VGA_VS),
 										.player1_X_Pos(player1_X_Pos),
 										.DrawX(DrawX),
@@ -171,14 +171,13 @@ module lab8( input               CLOCK_50,
 										.player2_X_Pos(player2_X_Pos),
                                         .player2_Y_Pos(player2_Y_Pos),
                                         .Freeze(Freeze),
-                                        .Restart(Restart),
                                         .VGA_R(VGA_R),
                                         .VGA_G(VGA_G),
                                         .VGA_B(VGA_B));
 										
     // Display keycode on hex display
-    HexDriver hex_inst_0 (k_on, HEX0);
-    HexDriver hex_inst_2 (l_on, HEX2);
+    HexDriver hex_inst_0 (l_on, HEX0);
+    HexDriver hex_inst_2 (k_on, HEX2);
     HexDriver hex_inst_4 (s_on, HEX4);
     HexDriver hex_inst_6 (a_on, HEX6);
 

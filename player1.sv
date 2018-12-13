@@ -36,9 +36,8 @@ module  player1 ( input     Clk,                // 50 MHz clock
     logic [9:0] fighter_Width = 10'd72;      // fighter width
     
 	logic [2:0] next_state;
-	shortint jump_states = 0, jump_time = 5;
-    shortint wait_states, wait_time = 20;
-    logic current_side,change_side, time_to_wait,hold;
+	logic [2:0] jump_states = 3'd0, jump_time = 3'd5;
+    logic current_side,change_side,hold;
     logic [9:0] fighter_X_Motion, fighter_Y_Motion;
     logic [9:0] fighter_X_Pos_in, fighter_X_Motion_in, fighter_Y_Pos_in, fighter_Y_Motion_in;
 	 
@@ -57,22 +56,22 @@ module  player1 ( input     Clk,                // 50 MHz clock
         case(next_state)
             3'd0,3'd3:
             begin
-                jump_states <= 0;
+                jump_states <= 3'd0;
             end
             3'd1,3'd4:
             begin
                 if(jump_states != jump_time)
-                    jump_states <= jump_states + 16'd1;
+                    jump_states <= jump_states + 3'd1;
                 else
                     jump_states<= jump_states;
             end
             3'd5,3'd6:
             begin
-                jump_states <= 0; 
+                jump_states <= 3'd0; 
             end
             default:
             begin
-                jump_states <= 0;
+                jump_states <= 3'd0;
             end
         endcase
 
@@ -84,13 +83,10 @@ module  player1 ( input     Clk,                // 50 MHz clock
             player1_Y_Pos <= fighter_Y_Reset;
             fighter_X_Motion <= 10'd0;
             fighter_Y_Motion <= 10'd0;
-            wait_states <= 0;
-            jump_states <= 0;
+            jump_states <= 3'd0;
         end
         else if(Freeze)
         begin
-            fighter_X_Motion <= 10'd0;
-            fighter_Y_Motion <= 10'd0;
         end
 		else
         begin
@@ -107,15 +103,6 @@ module  player1 ( input     Clk,                // 50 MHz clock
         if(fighter_Y_Motion == 1'b0)
             change_side <= current_side;
     
-        if(wait_states < wait_time)
-            wait_states <= wait_states + 16'd1;
-        else
-        begin
-            wait_states <= wait_time;
-           
-        end
-         if((a_on || s_on))
-                wait_states <= 0;
         
     end
     //////// Do not modify the always_ff blocks. ////////

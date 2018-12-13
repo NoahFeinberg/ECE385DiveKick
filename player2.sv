@@ -18,15 +18,17 @@ module  player2 ( input     Clk,                // 50 MHz clock
     logic [9:0] fighter_Y_Step = 10'd8;      // Step size on the Y axis
     logic [9:0] fighter_Height = 10'd105;      // fighter height
     logic [9:0] fighter_Width = 10'd72;      // fighter width
-    
+
+    //logic button_pressed, button_realeased;
+
+    logic current_side,change_side, can_act, cant_act =1'b0;
 	logic [2:0] next_state;
+    shortint timer = 0,next_time = 0, wait_timer = 30;
 	shortint jump_states = 0, jump_time = 5;
-    shortint wait_states, wait_time = 20000;
-    logic current_side,change_side, time_to_wait,hold;
     logic [9:0] fighter_X_Motion, fighter_Y_Motion;
     logic [9:0] fighter_X_Pos_in, fighter_X_Motion_in, fighter_Y_Pos_in, fighter_Y_Motion_in;
 	 
-    assign current_side = (player2_X_Pos>= player1_X_Pos);
+    assign current_side = (player2_X_Pos> player1_X_Pos);
     
     //////// Do not modify the always_ff blocks. ////////
     // Detect rising edge of frame_clk
@@ -35,6 +37,20 @@ module  player2 ( input     Clk,                // 50 MHz clock
         frame_clk_delayed <= frame_clk;
         frame_clk_rising_edge <= (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
     end
+
+    always_comb 
+	begin
+		next_time = timer;
+
+		if(frame_clk_rising_edge)
+		begin
+			if(timer != wait_timer)
+				next_time= timer + 16'd1;
+			else
+				next_time = 16'd0;
+		end
+	end
+
     // Update registers
     always_ff @ (posedge Clk)
     begin
@@ -60,15 +76,26 @@ module  player2 ( input     Clk,                // 50 MHz clock
             end
         endcase
 
+        timer <= next_time;
+        if(frame_clk_rising_edge)
+		begin
+			if((can_act ==1'b0) &&(timer == wait_timer))
+				can_act <= 1'b1;
+		
+		end
+
+        if(k_on|| l_on)
+            can_act<= 1'b0;
+        
         if (Reset)
         begin
 			state <= 3'd0;
+            can_act <= 1'b1;
 			fighter_X_Step <= 10'd10;
             player2_X_Pos <= fighter_X_Reset;
             player2_Y_Pos <= fighter_Y_Reset;
             fighter_X_Motion <= 10'd0;
             fighter_Y_Motion <= 10'd0;
-            wait_states <= 0;
             jump_states <= 0;
         end
         else if(Freeze)
@@ -88,16 +115,6 @@ module  player2 ( input     Clk,                // 50 MHz clock
         
         if(fighter_Y_Motion == 1'b0)
             change_side <= current_side;
-    
-        if(wait_states < wait_time)
-            wait_states <= wait_states + 16'd1;
-        else
-        begin
-            wait_states <= wait_time;
-            
-        end
-        if((k_on || l_on))
-            wait_states <= 0;
         
     end
 
@@ -109,16 +126,17 @@ module  player2 ( input     Clk,                // 50 MHz clock
         fighter_Y_Pos_in = player2_Y_Pos;
         fighter_X_Motion_in = fighter_X_Motion;
         fighter_Y_Motion_in = fighter_Y_Motion;
+        cant_act <= cant_act;
         // Update position and motion only at rising edge of frame clock
         if (frame_clk_rising_edge)
         begin
                 //keyboard interaction
-                // if(wait_states == wait_time)
-                // begin
+                if(can_act)
+                begin
 				case(state)
 					3'd0,3'd3:
 					begin
-						if(wait_states ==wait_time) //a = jump
+						if(k_on) //a = jump
 						begin
 							fighter_Y_Motion_in = (~ (fighter_Y_Step) + 1'd1);
                             next_state = 3'd1;
@@ -153,7 +171,8 @@ module  player2 ( input     Clk,                // 50 MHz clock
 					end
                     default:;
 				endcase
-				//end
+                end
+
             //movement
             fighter_X_Pos_in = player2_X_Pos + fighter_X_Motion;
             fighter_Y_Pos_in = player2_Y_Pos + fighter_Y_Motion;
@@ -178,6 +197,7 @@ module  player2 ( input     Clk,                // 50 MHz clock
                 fighter_X_Motion_in = 1'b0;
                 fighter_X_Pos_in = fighter_X_Right-fighter_Width;
                 fighter_Y_Motion_in = fighter_Y_Step;
+                next_state = 3'd1;
             end
             //left wall colision
             else if(player2_X_Pos  < fighter_X_Left)
@@ -185,6 +205,7 @@ module  player2 ( input     Clk,                // 50 MHz clock
                 fighter_X_Motion_in = 1'b0;
                 fighter_X_Pos_in = fighter_X_Left;
                 fighter_Y_Motion_in = fighter_Y_Step;
+                next_state = 3'd1;
             end
             
 
