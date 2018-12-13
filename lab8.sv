@@ -48,7 +48,7 @@ module lab8( input               CLOCK_50,
     
     logic Reset_h, Clk;
     logic [31:0] keycode;
-	logic a_on, s_on, k_on, l_on, Freeze;
+	logic a_on, s_on, k_on, l_on, Freeze, Restart;
     
     assign Clk = CLOCK_50;
     always_ff @ (posedge Clk) begin
@@ -60,7 +60,7 @@ module lab8( input               CLOCK_50,
     logic hpi_r, hpi_w, hpi_cs, hpi_reset;
 	 
 	logic [9:0] DrawX, DrawY,  player2_X_Pos, player2_Y_Pos, player1_X_Pos, player1_Y_Pos;
-	logic [1:0] p1_state, p2_state;
+	logic [2:0] p1_state, p2_state;
     
     // Interface between NIOS II and EZ-OTG chip
     hpi_io_intf hpi_io_inst(
@@ -136,7 +136,6 @@ module lab8( input               CLOCK_50,
 								        .Reset(~KEY[3] || Reset_h||Restart),
 							            .frame_clk(VGA_VS),
 										.player2_X_Pos(player2_X_Pos),
-										.player2_Y_Pos(player2_Y_Pos),
 										.DrawX(DrawX),
 										.DrawY(DrawY),
 										.a_on(a_on),
@@ -150,7 +149,6 @@ module lab8( input               CLOCK_50,
 								        .Reset(~KEY[3] || Reset_h||Restart),
 							            .frame_clk(VGA_VS),
 										.player1_X_Pos(player1_X_Pos),
-										.player1_Y_Pos(player1_Y_Pos),
 										.DrawX(DrawX),
 										.DrawY(DrawY),
 										.k_on(k_on),
@@ -168,8 +166,8 @@ module lab8( input               CLOCK_50,
 										.DrawY(DrawY),
 										.p1_state(p1_state),
 										.p2_state(p2_state),
-										.fighter_X_Pos(player1_X_Pos),
-                                        .fighter_Y_Pos(player1_Y_Pos),
+										.player1_X_Pos(player1_X_Pos),
+                                        .player1_Y_Pos(player1_Y_Pos),
 										.player2_X_Pos(player2_X_Pos),
                                         .player2_Y_Pos(player2_Y_Pos),
                                         .Freeze(Freeze),

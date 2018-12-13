@@ -28,41 +28,41 @@ module  color_mapper ( input  [0:5]       color,           // Whether current pi
     // Assign color based on is_ball signal
     always_comb
     case(color) 
-		0: //green
+		0: // not used
         begin
             Red = 8'h00; 
-            Green = 8'hff;
+            Green = 8'h00;
             Blue = 8'h00;
         end
-        1://white
+        1://not used
         begin
-            Red = 8'hff;
-            Green = 8'hff;
-            Blue = 8'hff;
-        end
-		2:
-		begin
-			Red = 8'hec;
-            Green = 8'hc9;
-            Blue = 8'h10;
+			Red = 8'h00; 
+            Green = 8'h00;
+            Blue = 8'h00;
 		end
-		3://pink
+		2: //not used
+		begin
+			Red = 8'h00; 
+            Green = 8'h00;
+            Blue = 8'h00;
+		end
+		3://not used
         begin
-            Red = 8'hf0; 
-            Green = 8'h0f;
-            Blue = 8'hf0;
-        end
-		4:
+			Red = 8'h00; 
+            Green = 8'h00;
+            Blue = 8'h00;
+		end
+		4://player1
 		begin
 			Red = 8'h00;
-            Green = 8'h00;
-            Blue = 8'h0;
+            Green = 8'h68;
+            Blue = 8'h8B;
 		end
-		7:
+		5://player 2
         begin
-            Red = 8'h11; 
-            Green = 8'h00;
-            Blue = 8'hab;
+            Red = 8'hFF; 
+            Green = 8'h7f;
+            Blue = 8'h50;
         end
 		8:
         begin
@@ -70,23 +70,35 @@ module  color_mapper ( input  [0:5]       color,           // Whether current pi
             Green = 8'hbb;
             Blue = 8'h11;
         end
-		9:
+		59:// ground
         begin
-            Red = 8'haa; 
-            Green = 8'hbb;
-            Blue = 8'h11;
+            Red = 8'h4F; 
+            Green = 8'h68;
+            Blue = 8'h98;
         end
-		10:
+        60://left background
         begin
-            Red = 8'ha7; 
-            Green = 8'ha7;
-            Blue = 8'ha7;
+            Red = 8'hE8; 
+            Green = 8'h4A;
+            Blue = 8'h27;
         end
-		63:
+		61://right background
         begin
-            Red = 8'h42; 
-            Green = 8'h85;
-            Blue = 8'h80;
+            Red = 8'h13; 
+            Green = 8'h29;
+            Blue = 8'h4b;
+        end
+        62://depleted health bar
+        begin
+            Red = 8'hDC; 
+            Green = 8'h14;
+            Blue = 8'h3C;
+        end
+		63://health bar
+        begin
+            Red = 8'h13; 
+            Green = 8'hff;
+            Blue = 8'h7f;
         end
         default://blue
         begin
