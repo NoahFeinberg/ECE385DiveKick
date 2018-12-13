@@ -37,11 +37,25 @@ module  player1 ( input     Clk,                // 50 MHz clock
     
 	logic [2:0] next_state;
 	logic [2:0] jump_states = 3'd0, jump_time = 3'd5;
-    logic current_side,change_side,hold;
+    logic current_side,change_side, can_act, cant_act =1'b0;
+    shortint timer = 0,next_time = 0, wait_timer = 10;
     logic [9:0] fighter_X_Motion, fighter_Y_Motion;
     logic [9:0] fighter_X_Pos_in, fighter_X_Motion_in, fighter_Y_Pos_in, fighter_Y_Motion_in;
 	 
     assign current_side = (player2_X_Pos>= player1_X_Pos);
+
+    always_comb 
+	begin
+		next_time = timer;
+
+		if(frame_clk_rising_edge)
+		begin
+			if(timer != wait_timer)
+				next_time= timer + 16'd1;
+			else
+				next_time = 16'd0;
+		end
+	end
     
     //////// Do not modify the always_ff blocks. ////////
     // Detect rising edge of frame_clk
@@ -74,6 +88,16 @@ module  player1 ( input     Clk,                // 50 MHz clock
                 jump_states <= 3'd0;
             end
         endcase
+
+        timer <= next_time;
+        if(frame_clk_rising_edge)
+		begin
+			if((can_act ==1'b0) &&(timer == wait_timer))
+				can_act <= 1'b1;
+            else
+                can_act<=cant_act;
+		
+		end
 
         if (Reset)
         begin
@@ -111,6 +135,7 @@ module  player1 ( input     Clk,                // 50 MHz clock
     always_comb
     begin
         // By default, keep motion and position unchanged
+        cant_act = can_act;
 	    next_state = state;
         fighter_X_Pos_in = player1_X_Pos;
         fighter_Y_Pos_in = player1_Y_Pos;
@@ -123,14 +148,16 @@ module  player1 ( input     Clk,                // 50 MHz clock
 				case(state)
 					3'd0,3'd3:
 					begin
-						if(a_on) //a = jump
+						if(a_on && can_act) //a = jump
 						begin
 							fighter_Y_Motion_in = (~ (fighter_Y_Step) + 1'd1);
                             next_state = 3'd1;
+                            cant_act = 1'b0;
 						end
-						else if(s_on)//s = kick
+						else if(s_on && can_act)//s = kick
 						begin
 							next_state = 3'd1;
+                            cant_act = 1'b0;
 							fighter_Y_Motion_in = (~ (fighter_Y_Step) + 1'd1);
                             fighter_X_Motion_in = (~ (fighter_X_Step) + 1'd1);
 						end
@@ -138,11 +165,12 @@ module  player1 ( input     Clk,                // 50 MHz clock
 					3'd1,3'd4:
 					begin
                         
-						if(s_on)//l = kick
+						if(s_on && can_act)//l = kick
 						begin
 							next_state = 3'd2;
 							fighter_X_Motion_in = fighter_X_Step;
 							fighter_Y_Motion_in = fighter_Y_Step;
+                            cant_act = 1'b0;
 						end
                         else if(fighter_X_Motion != 10'd0)
                         begin

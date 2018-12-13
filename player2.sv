@@ -23,7 +23,7 @@ module  player2 ( input     Clk,                // 50 MHz clock
 
     logic current_side,change_side, can_act, cant_act =1'b0;
 	logic [2:0] next_state;
-    shortint timer = 0,next_time = 0, wait_timer = 30;
+    shortint timer = 0,next_time = 0, wait_timer = 10;
 	shortint jump_states = 0, jump_time = 5;
     logic [9:0] fighter_X_Motion, fighter_Y_Motion;
     logic [9:0] fighter_X_Pos_in, fighter_X_Motion_in, fighter_Y_Pos_in, fighter_Y_Motion_in;
@@ -81,11 +81,10 @@ module  player2 ( input     Clk,                // 50 MHz clock
 		begin
 			if((can_act ==1'b0) &&(timer == wait_timer))
 				can_act <= 1'b1;
+            else
+                can_act<=cant_act;
 		
 		end
-
-        if(k_on|| l_on)
-            can_act<= 1'b0;
         
         if (Reset)
         begin
@@ -126,36 +125,38 @@ module  player2 ( input     Clk,                // 50 MHz clock
         fighter_Y_Pos_in = player2_Y_Pos;
         fighter_X_Motion_in = fighter_X_Motion;
         fighter_Y_Motion_in = fighter_Y_Motion;
-        cant_act <= cant_act;
+        cant_act = can_act;
         // Update position and motion only at rising edge of frame clock
         if (frame_clk_rising_edge)
         begin
                 //keyboard interaction
-                if(can_act)
                 begin
 				case(state)
 					3'd0,3'd3:
 					begin
-						if(k_on) //a = jump
+						if(k_on && can_act) //a = jump
 						begin
 							fighter_Y_Motion_in = (~ (fighter_Y_Step) + 1'd1);
                             next_state = 3'd1;
+                            cant_act<= 1'b0;
 						end
-						else if(l_on)//s = kick
+						else if(l_on && can_act)//s = kick
 						begin
 							next_state = 3'd1;
 							fighter_Y_Motion_in = (~ (fighter_Y_Step) + 1'd1);
                             fighter_X_Motion_in = (~ (fighter_X_Step) + 1'd1);
+                            cant_act<= 1'b0;
 						end
 					end
 					3'd1,3'd4:
 					begin
                         
-						if(l_on)//l = kick
+						if(l_on && can_act)//l = kick
 						begin
 							next_state = 3'd2;
 							fighter_X_Motion_in = fighter_X_Step;
 							fighter_Y_Motion_in = fighter_Y_Step;
+                            cant_act<= 1'b0;
 						end
                         else if(fighter_X_Motion != 10'd0)
                         begin

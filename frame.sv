@@ -9,7 +9,7 @@ module frame(   input               Clk,                // 50 MHz clock
 	logic will_freeze = 1'b0;
 	logic p1_hit, p2_hit;
 
-	shortint timer = 0,next_time = 0, wait_timer = 1;
+	logic timer = 0,next_time = 0, wait_timer = 1;
     logic [0:5] color, next_color, next_color2;
     logic [0:11][0:143][0:5] 	dive_health_bar, kick_health_bar;
 	logic [0:19][0:199][0:5]	p1_win, p2_win;
@@ -24,7 +24,10 @@ module frame(   input               Clk,                // 50 MHz clock
     background background_instance(
                                     .Clk(Clk),
                                     .dive_health_bar(dive_health_bar),
-                                    .kick_health_bar(kick_health_bar)
+                                    .kick_health_bar(kick_health_bar),
+									.p1_win(p1_win),
+									.p2_win(p2_win),
+									.title(title)
 								  );
 						  
 	sprite	sprite_color(				.Clk(Clk),
@@ -51,9 +54,9 @@ module frame(   input               Clk,                // 50 MHz clock
 		if(frame_clk_rising_edge)
 		begin
 			if(timer != wait_timer)
-				next_time= timer + 16'd1;
+				next_time= timer + 1'd1;
 			else
-				next_time = 16'd0;
+				next_time = 1'd0;
 		end
 	end
 
@@ -65,21 +68,21 @@ module frame(   input               Clk,                // 50 MHz clock
 		begin
 			Freeze <= 1'b0;
 			right_bar_x <= right_bar_left;
-			left_bar_x <= right_bar_right;
+			left_bar_x <= left_bar_right;
 		end
 
 		if(frame_clk_rising_edge)
 		begin
 			if(p1_hit)
 			begin
-				if((right_bar_x<right_bar_right)&& (timer == wait_timer))
-					right_bar_x <= right_bar_x + 10'd10;
+				if(right_bar_x<=right_bar_right)
+					right_bar_x <= right_bar_x + 10'd8;
 			end
 		
 			if(p2_hit)
 			begin
-				if((left_bar_x>=left_bar_left)&& (timer == wait_timer))
-					left_bar_x <= left_bar_x - 10'd10;
+				if(left_bar_x>=left_bar_left)
+					left_bar_x <= left_bar_x - 10'd8;
 			end
 		end
 
@@ -108,7 +111,15 @@ module frame(   input               Clk,                // 50 MHz clock
     logic [9:0] right_bar_left = 10'd486;
     logic [9:0] right_bar_right = 10'd630;
 	logic [9:0] right_bar_x = 10'd486;
-    
+
+	logic [9:0] title_bottom = 10'd39;
+    logic [9:0] title_top = 10'd0;
+    logic [9:0] title_left = 10'd220;
+    logic [9:0] title_right = 10'd419;
+
+	logic [9:0] win_bottom = 10'd59;
+    logic [9:0] win_top = 10'd40;
+
     logic [9:0] fighter_Height = 10'd105;      // fighter height
     logic [9:0] fighter_Width = 10'd72;      // fighter width
 
@@ -221,16 +232,31 @@ module frame(   input               Clk,                // 50 MHz clock
 		next_color = 6'd0;
 		next_color2 = 6'd0;
 
+		//title
+		if(((DrawY<title_bottom) && (DrawY>=title_top))&& ((DrawX>=title_left) && (DrawX<title_right)))
+        begin
+            next_color = title[DrawY-title_top][DrawX-title_left];
+        end
+
+
 		//player 1 wins
 		if(p1_hit)
 		begin
-			next_color = 6'd4;
+			next_color = 6'd10;
+			if(((DrawY<win_bottom) && (DrawY>=win_top))&& ((DrawX>=title_left) && (DrawX<title_right)&&(right_bar_x>right_bar_right)))
+        	begin
+            	next_color = p1_win[DrawY-win_top][DrawX-title_left];
+       		end
 		end
 
-		//player 1 wins
+		//player 2 wins
 		if(p2_hit)
 		begin
-			next_color = 6'd5;
+			next_color = 6'd11;
+			if(((DrawY<win_bottom) && (DrawY>=win_top))&& ((DrawX>=title_left) && (DrawX<title_right))&& (left_bar_x<left_bar_left))
+        	begin
+            	next_color = p2_win[DrawY-win_top][DrawX-title_left];
+       		end
 		end
 
 		//dive health bar
@@ -300,27 +326,27 @@ module frame(   input               Clk,                // 50 MHz clock
 			case(p2_state)
 				0:
 					begin
-						next_color = p1_back_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd1;		
+						next_color = p1_back_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd3;		
 					end
 				1:
 					begin
-						next_color = p1_back_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd1;
+						next_color = p1_back_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd3;
 					end
 				2:
 					begin
-						next_color = p1_back_kick[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd1;
+						next_color = p1_back_kick[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd3;
 					end
 				3:
 					begin
-						next_color = p1_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd1;		
+						next_color = p1_ground[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd3;		
 					end
 				4:
 					begin
-						next_color = p1_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd1;
+						next_color = p1_jump[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd3;
 					end
 				5:
 					begin
-						next_color = p1_kick[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd1;
+						next_color = p1_kick[DrawY-player2_Y_Pos][DrawX-player2_X_Pos]+6'd3;
 					end
 				default:
 					next_color = 6'd63;//error
